@@ -1,6 +1,7 @@
 package com.unkarjedy.platformer.controller;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.GL30;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -21,13 +22,11 @@ public class WorldRenderer {
 
     private OrthogonalTiledMapRenderer renderer;
     private OrthographicCamera camera;
+    SpriteBatch sb = new SpriteBatch();;
 
     private GameLevel level;
 
-    SpriteBatch sb;
-
     GameController gameController;
-
     Player player;
     PlayerController playerController;
 
@@ -37,14 +36,11 @@ public class WorldRenderer {
         level = new GameLevel("level1.tmx");
         renderer = new OrthogonalTiledMapRenderer(level.getMap(), UNIT_SCALE);
 
-        sb = new SpriteBatch();
-
         initCamera();
         createPlayer();
         initPhysicsEngine();
 
         gameController = new GameController(playerController);
-
         Gdx.input.setInputProcessor(gameController);
     }
 
@@ -58,7 +54,7 @@ public class WorldRenderer {
         physics = new PhysicsEngine();
         physics.setLevel(level);
 //        physics.addGameObject(player);
-        physics.setPlayer(player);
+        physics.setPlayer(playerController);
     }
 
     private void createPlayer() {
@@ -91,6 +87,8 @@ public class WorldRenderer {
     }
 
     private void renderLevel() {
+        Gdx.gl.glClearColor(0.7f, 0.7f, 1.0f, 1);
+        Gdx.gl.glClear(GL30.GL_COLOR_BUFFER_BIT);
         renderer.setView(camera);
         renderer.render();
     }
@@ -98,6 +96,7 @@ public class WorldRenderer {
     private void renderPlayer(float dt) {
         TextureRegion frame = player.getFrame();
 
+        sb = new SpriteBatch();
         sb.setProjectionMatrix(camera.combined);
         sb.begin();
         if (player.isFacesRight()){

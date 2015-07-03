@@ -47,7 +47,6 @@ public class Player extends GameObject {
         grounded = false;
     }
 
-
     public TextureRegion getFrame() {
         switch (state) {
             case Standing:

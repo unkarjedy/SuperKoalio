@@ -1,17 +1,20 @@
 package com.unkarjedy.platformer.controller;
 
+import com.unkarjedy.platformer.model.GameLevel;
+import com.unkarjedy.platformer.model.GameObject;
 import com.unkarjedy.platformer.model.Player;
 
 /**
  * Created by Dima Naumenko on 02.07.2015.
  */
-public class PlayerController {
+public class PlayerController extends GameObjectController {
 
     private Player player;
     private boolean jumpingPressed;
     private long jumpPressedTime;
 
     public PlayerController(Player player) {
+        super(player);
         this.player = player;
     }
 
@@ -32,7 +35,9 @@ public class PlayerController {
     }
 
     public void jump() {
-        if (!player.getState().equals(Player.State.Jumping)) {
+        Player.State state = player.getState();
+        if (!state.equals(Player.State.Jumping) &&
+                !state.equals(Player.State.Falling)) {
             jumpingPressed = true;
             player.setGrounded(false);
             jumpPressedTime = System.currentTimeMillis();
@@ -51,8 +56,8 @@ public class PlayerController {
             }
         }
 
-        if(player.getState() != Player.State.Falling){
-            if(player.getVelocity().y < 0){
+        if (player.getState() != Player.State.Falling) {
+            if (player.getVelocity().y < 0) {
                 player.setState(Player.State.Falling);
                 player.setGrounded(false);
             }
@@ -79,5 +84,14 @@ public class PlayerController {
 
     public Player getPlayer() {
         return player;
+    }
+
+    @Override
+    public void onLevelCollided(GameLevel.LayerType type) {
+        if (player.getVelocity().y > 0) {
+            player.setState(Player.State.Falling);
+        } else {
+            player.setGrounded(true);
+        }
     }
 }

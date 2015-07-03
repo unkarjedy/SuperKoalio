@@ -29,7 +29,7 @@ public class GameController implements InputProcessor{
     @Override
     public boolean keyDown(int keycode) {
         // && player.isGrounded()
-        if (keycode == Input.Keys.UP  && playerController.getPlayer().getState() != Player.State.Falling) {
+        if (keycode == Input.Keys.UP) {
             playerController.jump();
         }
 
