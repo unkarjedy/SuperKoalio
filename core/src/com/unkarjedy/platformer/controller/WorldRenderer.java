@@ -1,12 +1,13 @@
 package com.unkarjedy.platformer.controller;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.FPSLogger;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.GL30;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
-import com.badlogic.gdx.math.Vector2;
 import com.unkarjedy.platformer.model.GameLevel;
 import com.unkarjedy.platformer.model.Player;
 
@@ -16,32 +17,40 @@ import static com.unkarjedy.platformer.utils.Constants.*;
  * Created by Dima Naumenko on 01.07.2015.
  */
 public class WorldRenderer {
+
     private static float UNIT_SCALE = 1 / 16f;
     private static float viewportWidth = 30;
     private static float viewportHeight = 20;
 
     private OrthogonalTiledMapRenderer renderer;
     private OrthographicCamera camera;
-    SpriteBatch sb = new SpriteBatch();;
+    private SpriteBatch sb = new SpriteBatch();;
+    FPSLogger fpsLogger = new FPSLogger();
 
-    private GameLevel level;
-
-    GameController gameController;
+    GameLevel level;
     Player player;
-    PlayerController playerController;
-
-    PhysicsEngine physics;
+    GameController gameController;
 
     public WorldRenderer() {
-        level = new GameLevel("level1.tmx");
-        renderer = new OrthogonalTiledMapRenderer(level.getMap(), UNIT_SCALE);
-
+        loadLevel("level1.tmx");
         initCamera();
         createPlayer();
-        initPhysicsEngine();
+        setDefaultPlayerPosition();
 
-        gameController = new GameController(playerController);
+        gameController = new GameController(this, player, level);
         Gdx.input.setInputProcessor(gameController);
+
+        // PLACE SHIT CODE HERE
+        level.getLevelSound().play();
+    }
+
+    private void loadLevel(String levelFilename) {
+        level = new GameLevel(levelFilename);
+        renderer = new OrthogonalTiledMapRenderer(level.getMap(), UNIT_SCALE);
+    }
+
+    public void setDefaultPlayerPosition() {
+        player.setPosition(level.getPlayerSpawnPosition());
     }
 
     private void initCamera() {
@@ -50,31 +59,25 @@ public class WorldRenderer {
         camera.update();
     }
 
-    private void initPhysicsEngine() {
-        physics = new PhysicsEngine();
-        physics.setLevel(level);
-//        physics.addGameObject(player);
-        physics.setPlayer(playerController);
-    }
 
     private void createPlayer() {
         player = new Player();
-        player.setPosition(new Vector2(10, 5));
-        player.setWidth(UNIT_SCALE * player.getTexture().getWidth());
-        player.setHeight(UNIT_SCALE * player.getTexture().getHeight());
-        playerController = new PlayerController(player);
+        player.setWidth(UNIT_SCALE * player.getWidth());
+        player.setHeight(UNIT_SCALE * player.getHeight());
     }
 
     public void render(float delta) {
+        Gdx.gl.glClearColor(0.1f, 0.1f, 0.1f, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
         float dt = Gdx.graphics.getDeltaTime();
 
         update(dt);
 
-        camera.position.x = player.getPosition().x;
-        camera.update();
-
         renderLevel();
         renderPlayer(dt);
+
+        fpsLogger.log();
     }
 
     private void update(float dt) {
@@ -83,7 +86,9 @@ public class WorldRenderer {
             dt = MIN_DELTA_TIME;
 
         gameController.update(dt);
-        physics.update(dt); // collisions and forces
+
+        camera.position.x = player.getPosition().x;
+        camera.update();
     }
 
     private void renderLevel() {
@@ -94,9 +99,9 @@ public class WorldRenderer {
     }
 
     private void renderPlayer(float dt) {
+//        player.render(dt);
         TextureRegion frame = player.getFrame();
 
-        sb = new SpriteBatch();
         sb.setProjectionMatrix(camera.combined);
         sb.begin();
         if (player.isFacesRight()){
@@ -112,4 +117,5 @@ public class WorldRenderer {
         viewportWidth = viewportHeight * width / height;
         initCamera();
     }
+
 }

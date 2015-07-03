@@ -11,26 +11,32 @@ import com.unkarjedy.platformer.utils.TexturePool;
  */
 public class Player extends GameObject {
 
-    public static float MAX_VELOCITY = 10f;
+    public static final float MAX_VELOCITY = 10f;
     public static float MAX_JUMP_SPEED = 14f;
-    public static final float DAMPING = 0.87f;
     public static final long LONG_JUMP_PRESS = 250;
+    public static final int DEFAULT_LIVES = 3;
 
     public enum State {
-        Standing, Walking, Jumping, Falling
+        Standing, Walking, Jumping, Falling, Dead
     }
 
-    State state;
-    boolean facesRight = true;
-    boolean grounded = false;
+
+    private int lives = DEFAULT_LIVES;
+    private State state;
+    private float stateTime = 0;
+    private boolean facesRight = true;
+    private boolean grounded = false;
 
     static public final Animation stand;
     static public final Animation walk;
     static public final Animation jump;
 
+
+    static int tileWidth = 18;
+    static int tileHeight = 26;
     static {
         Texture koalaTexture = new Texture("koalio.png");
-        TextureRegion[] regions = TextureRegion.split(koalaTexture, 18, 26)[0];
+        TextureRegion[] regions = TextureRegion.split(koalaTexture, tileWidth, tileHeight)[0];
         stand = new Animation(0, regions[0]);
         jump = new Animation(0, regions[1]);
         walk = new Animation(0.15f, regions[2], regions[3], regions[4]);
@@ -38,13 +44,24 @@ public class Player extends GameObject {
     }
 
     public Player() {
-        texture = TexturePool.getTexture("koalio_stand.png");
         position = new Vector2();
         velocity = new Vector2();
         state = State.Standing;
         facesRight = true;
         stateTime = 0;
         grounded = false;
+        lives = DEFAULT_LIVES;
+
+
+        width = tileWidth;
+        height = tileHeight;
+    }
+
+    @Override
+    public void update(float dt) {
+        super.update(dt);
+
+        stateTime += dt;
     }
 
     public TextureRegion getFrame() {
@@ -59,15 +76,6 @@ public class Player extends GameObject {
         }
 
         return null;
-    }
-
-
-    public Texture getTexture() {
-        return texture;
-    }
-
-    public void setTexture(Texture texture) {
-        this.texture = texture;
     }
 
     public boolean isGrounded() {
@@ -90,7 +98,17 @@ public class Player extends GameObject {
         return state;
     }
 
-    public void setState(State state) {
+    public void setState(final State state) {
+        if(state != this.state)
+            stateTime = 0;
         this.state = state;
+    }
+
+    public int getLives() {
+        return lives;
+    }
+
+    public void decreaseLives() {
+        lives--;
     }
 }

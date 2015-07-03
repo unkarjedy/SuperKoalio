@@ -1,8 +1,11 @@
 package com.unkarjedy.platformer.controller;
 
-import com.unkarjedy.platformer.model.GameLevel;
-import com.unkarjedy.platformer.model.GameObject;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.unkarjedy.platformer.model.Player;
+
+import static com.badlogic.gdx.maps.tiled.TiledMapTileLayer.*;
+import static com.unkarjedy.platformer.model.GameLevel.*;
 
 /**
  * Created by Dima Naumenko on 02.07.2015.
@@ -12,6 +15,19 @@ public class PlayerController extends GameObjectController {
     private Player player;
     private boolean jumpingPressed;
     private long jumpPressedTime;
+
+    private PlayerStateListner playerStateListner;
+
+    private Sound jumpSound;
+    private Sound hurtSound;
+
+    private Cell previousCollidedHazardCell;
+
+    {
+        jumpSound = Gdx.audio.newSound(Gdx.files.internal("jump.wav"));
+        hurtSound = Gdx.audio.newSound(Gdx.files.internal("hurt.wav"));
+    }
+
 
     public PlayerController(Player player) {
         super(player);
@@ -43,6 +59,8 @@ public class PlayerController extends GameObjectController {
             jumpPressedTime = System.currentTimeMillis();
             player.setState(Player.State.Jumping);
             player.getVelocity().y = Player.MAX_JUMP_SPEED;
+
+            jumpSound.play();
         }
     }
 
@@ -87,11 +105,33 @@ public class PlayerController extends GameObjectController {
     }
 
     @Override
-    public void onLevelCollided(GameLevel.LayerType type) {
-        if (player.getVelocity().y > 0) {
-            player.setState(Player.State.Falling);
-        } else {
-            player.setGrounded(true);
+    public void onLevelTileCollided(LayerType type, Cell cell, boolean isXAxis) {
+        if(LayerType.WALLS == type) {
+            if(!isXAxis){
+                if (player.getVelocity().y > 0) {
+                    player.setState(Player.State.Falling);
+                } else {
+                    player.setGrounded(true);
+                }
+            }
         }
+        if(LayerType.HAZZARDS == type) {
+            player.decreaseLives();
+            if(player.getLives() < 0){
+                playerStateListner.onPlayerDead();
+            } else {
+                playerStateListner.onPlayerLivesDecreased();
+            }
+
+            if(cell != previousCollidedHazardCell)
+                hurtSound.play();
+
+            previousCollidedHazardCell = cell;
+        }
+
+    }
+
+    public void setPlayerStateListner(PlayerStateListner playerStateListner) {
+        this.playerStateListner = playerStateListner;
     }
 }

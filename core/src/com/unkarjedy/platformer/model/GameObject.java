@@ -15,14 +15,11 @@ public class GameObject {
     protected float height;
 
     protected Texture texture;
-    float stateTime = 0;
 
     public void update(float dt) {
         velocity.scl(dt);
         position.add(velocity);
         velocity.scl(1 / dt);
-
-        stateTime += dt;
     }
 
     public Vector2 getPosition() {
@@ -69,4 +66,5 @@ public class GameObject {
         Vector2 accelStep = accel.cpy().scl(dt);
         velocity.add(accelStep);
     }
+
 }

@@ -1,5 +1,7 @@
 package com.unkarjedy.platformer.controller;
 
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
+import com.badlogic.gdx.math.Rectangle;
 import com.unkarjedy.platformer.model.GameLevel;
 
 /**
@@ -7,6 +9,6 @@ import com.unkarjedy.platformer.model.GameLevel;
  */
 public interface CollisionListner {
 
-    void onLevelCollided(GameLevel.LayerType type);
+    void onLevelTileCollided(GameLevel.LayerType type, TiledMapTileLayer.Cell tile, boolean isXAxis);
 
 }

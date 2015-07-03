@@ -3,34 +3,59 @@ package com.unkarjedy.platformer.controller;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
+import com.unkarjedy.platformer.model.GameLevel;
 import com.unkarjedy.platformer.model.Player;
 
 /**
  * Created by Dima Naumenko on 02.07.2015.
  */
-public class GameController implements InputProcessor{
+public class GameController implements InputProcessor, PlayerStateListner {
     private PlayerController playerController;
+    private PhysicsEngine physics;
+    private GameLevel level;
+    private WorldRenderer worldRenderer;
 
-    public GameController(PlayerController playerController) {
-        this.playerController = playerController;
+    public GameController(WorldRenderer worldRenderer, Player player, GameLevel level) {
+        this.worldRenderer = worldRenderer;
+        playerController = new PlayerController(player);
+        playerController.setPlayerStateListner(this);
+        this.level = level;
+
+        initPhysicsEngine();
     }
 
     public void update(float dt) {
+        checkPressedKeys();
+
+        playerController.update(dt);
+
+        physics.update(dt); // collisions and forces
+    }
+
+    private void checkPressedKeys() {
         if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
             playerController.moveLeft();
         }
         if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
             playerController.moveRight();
         }
+        if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
+            playerController.jump();
+        }
+    }
 
-        playerController.update(dt);
+
+    private void initPhysicsEngine() {
+        physics = new PhysicsEngine();
+        physics.setLevel(level);
+//        physics.addGameObject(player);
+        physics.setPlayerController(playerController);
     }
 
     @Override
     public boolean keyDown(int keycode) {
-        // && player.isGrounded()
         if (keycode == Input.Keys.UP) {
-            playerController.jump();
+//            playerController.jump();
         }
 
         return true;
@@ -74,4 +99,13 @@ public class GameController implements InputProcessor{
         return false;
     }
 
+    @Override
+    public void onPlayerDead() {
+
+    }
+
+    @Override
+    public void onPlayerLivesDecreased() {
+        worldRenderer.setDefaultPlayerPosition();
+    }
 }
