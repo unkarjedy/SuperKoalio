@@ -117,10 +117,10 @@ public class PlayerController extends GameObjectController {
         }
         if(LayerType.HAZZARDS == type) {
             player.decreaseLives();
-            if(player.getLives() < 0){
-                playerStateListner.onPlayerDead();
-            } else {
+            if(player.getLives() > 0){
                 playerStateListner.onPlayerLivesDecreased();
+            } else {
+                playerStateListner.onPlayerDead();
             }
 
             if(cell != previousCollidedHazardCell)

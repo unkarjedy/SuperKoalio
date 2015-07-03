@@ -25,6 +25,7 @@ public class WorldRenderer {
     private OrthogonalTiledMapRenderer renderer;
     private OrthographicCamera camera;
     private SpriteBatch sb = new SpriteBatch();;
+    private HUDRenderer hudRenderer;
     FPSLogger fpsLogger = new FPSLogger();
 
     GameLevel level;
@@ -42,6 +43,8 @@ public class WorldRenderer {
 
         // PLACE SHIT CODE HERE
         level.getLevelSound().play();
+
+        hudRenderer = new HUDRenderer(player);
     }
 
     private void loadLevel(String levelFilename) {
@@ -74,8 +77,12 @@ public class WorldRenderer {
 
         update(dt);
 
+
+        sb.setProjectionMatrix(camera.combined);
         renderLevel();
-        renderPlayer(dt);
+        renderPlayer();
+
+        hudRenderer.render();
 
         fpsLogger.log();
     }
@@ -98,11 +105,9 @@ public class WorldRenderer {
         renderer.render();
     }
 
-    private void renderPlayer(float dt) {
-//        player.render(dt);
+    private void renderPlayer() {
         TextureRegion frame = player.getFrame();
 
-        sb.setProjectionMatrix(camera.combined);
         sb.begin();
         if (player.isFacesRight()){
             sb.draw(frame, player.getPosition().x, player.getPosition().y, player.getWidth(), player.getHeight());
