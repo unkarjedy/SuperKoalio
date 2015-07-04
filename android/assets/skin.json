@@ -1,9 +1,0 @@
-{
-    "com.badlogic.gdx.graphics.g2d.BitmapFont": {
-        "titleblack": { "file": "fonts/titlefontblack.fnt" },
-        "titlewhite": { "file": "fonts/titlefontwhite.fnt" },
-        "drummon64black": { "file": "fonts/drummon64black.fnt" },
-        "drummon48black": { "file": "fonts/drummon48black.fnt" },
-        "drummon32black": { "file": "fonts/drummon32black.fnt" },
-    },
- }

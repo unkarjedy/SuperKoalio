@@ -4,9 +4,12 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.math.Vector2;
+import com.unkarjedy.platformer.PlatformerGame;
 import com.unkarjedy.platformer.model.GameLevel;
 import com.unkarjedy.platformer.model.Player;
 import com.unkarjedy.platformer.view.GameOverScreen;
+import com.unkarjedy.platformer.view.PlayScreen;
 
 /**
  * Created by Dima Naumenko on 02.07.2015.
@@ -14,13 +17,13 @@ import com.unkarjedy.platformer.view.GameOverScreen;
 public class GameController implements InputProcessor, PlayerStateListner {
     private PlayerController playerController;
     private PhysicsEngine physics;
-    private Game game;
-    private GameRenderer gameRenderer;
+    private PlatformerGame game;
+    private PlayScreen playScreen;
     private GameLevel level;
 
-    public GameController(Game game, GameRenderer gameRenderer, Player player, GameLevel level) {
+    public GameController(PlatformerGame game, PlayScreen playScreen, Player player, GameLevel level) {
         this.game = game;
-        this.gameRenderer = gameRenderer;
+        this.playScreen = playScreen;
         playerController = new PlayerController(player);
         playerController.setPlayerStateListner(this);
         this.level = level;
@@ -32,8 +35,23 @@ public class GameController implements InputProcessor, PlayerStateListner {
         checkPressedKeys();
 
         playerController.update(dt);
+        clipPlayerPOsitionX();
 
         physics.update(dt); // collisions and forces
+    }
+
+    private void clipPlayerPOsitionX() {
+        Vector2 playerPosition = playerController.getPlayer().getPosition();
+
+        float playerLeftClip = 0;
+        float playerRightClip = level.getWallsLayer().getWidth() - playerController.getPlayer().getWidth();
+
+        if (playerPosition.x < playerLeftClip) {
+            playerPosition.x = playerLeftClip;
+        }
+        if (playerPosition.x > playerRightClip) {
+            playerPosition.x = playerRightClip;
+        }
     }
 
     private void checkPressedKeys() {
@@ -52,7 +70,6 @@ public class GameController implements InputProcessor, PlayerStateListner {
     private void initPhysicsEngine() {
         physics = new PhysicsEngine();
         physics.setLevel(level);
-//        physics.addGameObject(player);
         physics.setPlayerController(playerController);
     }
 
@@ -110,6 +127,6 @@ public class GameController implements InputProcessor, PlayerStateListner {
 
     @Override
     public void onPlayerLivesDecreased() {
-        gameRenderer.setDefaultPlayerPosition();
+        playScreen.setDefaultPlayerPosition();
     }
 }

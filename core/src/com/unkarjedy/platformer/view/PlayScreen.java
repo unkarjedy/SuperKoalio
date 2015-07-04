@@ -1,23 +1,27 @@
-package com.unkarjedy.platformer.controller;
+package com.unkarjedy.platformer.view;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.GL30;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.unkarjedy.platformer.PlatformerGame;
+import com.unkarjedy.platformer.controller.CameraController;
+import com.unkarjedy.platformer.controller.GameController;
 import com.unkarjedy.platformer.model.GameLevel;
 import com.unkarjedy.platformer.model.Player;
 
-import static com.unkarjedy.platformer.utils.Constants.*;
+import static com.unkarjedy.platformer.utils.Constants.MIN_DELTA_TIME;
 
 /**
  * Created by Dima Naumenko on 01.07.2015.
  */
-public class GameRenderer {
+public class PlayScreen implements Screen {
+
+    private final PlatformerGame game;
 
     private static float UNIT_SCALE = 1 / 16f;
     private static float viewportWidth = 30;
@@ -27,15 +31,18 @@ public class GameRenderer {
     private OrthographicCamera camera;
     private SpriteBatch sb = new SpriteBatch();;
     private HUDRenderer hudRenderer;
-    FPSLogger fpsLogger = new FPSLogger();
+    private FPSLogger fpsLogger = new FPSLogger();
 
-    GameLevel level;
-    Player player;
-    GameController gameController;
+    private GameLevel level;
+    private Player player;
+    private GameController gameController;
+    private CameraController cameraController;
 
-    public GameRenderer(Game game) {
+    public PlayScreen(PlatformerGame game) {
+        this.game = game;
+
         loadLevel("level1.tmx");
-        initCamera();
+        createCamera();
         createPlayer();
         setDefaultPlayerPosition();
 
@@ -43,9 +50,33 @@ public class GameRenderer {
         Gdx.input.setInputProcessor(gameController);
 
         // PLACE SHIT CODE HERE
-        level.getLevelSound().play();
+        if(!level.getLevelMusic().isPlaying()){
+            level.getLevelMusic().setLooping(true);
+            level.getLevelMusic().play();
+        }
 
         hudRenderer = new HUDRenderer(player);
+
+        cameraController = new CameraController(camera, player, level);
+    }
+
+
+    @Override
+    public void render(float delta) {
+        Gdx.gl.glClearColor(0.1f, 0.1f, 0.1f, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        float dt = Gdx.graphics.getDeltaTime();
+
+        update(dt);
+
+        sb.setProjectionMatrix(camera.combined);
+        renderLevel();
+        renderPlayer();
+
+        hudRenderer.render();
+
+        fpsLogger.log();
     }
 
     private void loadLevel(String levelFilename) {
@@ -57,35 +88,16 @@ public class GameRenderer {
         player.setPosition(level.getPlayerSpawnPosition());
     }
 
-    private void initCamera() {
+    private void createCamera() {
         camera = new OrthographicCamera();
         camera.setToOrtho(false, viewportWidth, viewportHeight);
         camera.update();
     }
 
-
     private void createPlayer() {
         player = new Player();
         player.setWidth(UNIT_SCALE * player.getWidth());
         player.setHeight(UNIT_SCALE * player.getHeight());
-    }
-
-    public void render(float delta) {
-        Gdx.gl.glClearColor(0.1f, 0.1f, 0.1f, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-        float dt = Gdx.graphics.getDeltaTime();
-
-        update(dt);
-
-
-        sb.setProjectionMatrix(camera.combined);
-        renderLevel();
-        renderPlayer();
-
-        hudRenderer.render();
-
-        fpsLogger.log();
     }
 
     private void update(float dt) {
@@ -94,9 +106,7 @@ public class GameRenderer {
             dt = MIN_DELTA_TIME;
 
         gameController.update(dt);
-
-        camera.position.x = player.getPosition().x;
-        camera.update();
+        cameraController.update(dt);
     }
 
     private void renderLevel() {
@@ -112,10 +122,36 @@ public class GameRenderer {
         sb.end();
     }
 
+
+    @Override
     public void resize(int width, int height) {
         viewportWidth = viewportHeight * width / height;
-        initCamera();
+        camera.setToOrtho(false, viewportWidth, viewportHeight);
         hudRenderer.resize(width, height);
     }
 
+    @Override
+    public void show() {
+
+    }
+
+    @Override
+    public void hide() {
+
+    }
+
+    @Override
+    public void pause() {
+
+    }
+
+    @Override
+    public void resume() {
+
+    }
+
+    @Override
+    public void dispose() {
+        level.getLevelMusic().dispose();
+    }
 }

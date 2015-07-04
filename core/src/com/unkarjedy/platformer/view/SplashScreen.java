@@ -3,15 +3,13 @@ package com.unkarjedy.platformer.view;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.unkarjedy.platformer.PlatformerGame;
 import com.unkarjedy.platformer.utils.ResourceManager;
 
 /**
@@ -21,13 +19,12 @@ public class SplashScreen implements Screen {
 
     private OrthographicCamera camera;
     private Sprite splash;
-    private Game game;
+    private PlatformerGame game;
     private SpriteBatch sb;
 
     BitmapFont font;
 
-
-    public SplashScreen(Game game) {
+    public SplashScreen(PlatformerGame game) {
         this.game = game;
     }
 
@@ -39,12 +36,12 @@ public class SplashScreen implements Screen {
         sb.setProjectionMatrix(camera.combined);
         sb.begin();
         sb.draw(splash, 0, 0, camera.viewportWidth, camera.viewportHeight);
-        int progress = (int) (100 * ResourceManager.manager.getProgress());
+        int progress = (int) (100 * ResourceManager.getManager().getProgress());
         font.draw(sb, "Loading: " + progress + "%", 40, 40);
         sb.end();
 
-        if(ResourceManager.manager.update())
-            game.setScreen(new GameScreen(game));
+        if(ResourceManager.getManager().update())
+            game.setScreen(new PlayScreen(game));
     }
 
     @Override
@@ -52,10 +49,10 @@ public class SplashScreen implements Screen {
         ResourceManager.load();
 
         sb = new SpriteBatch();
-        splash = new Sprite(new Texture("Koalaabilitylol.png"));
+        splash = new Sprite(new Texture("textures/Koalaabilitylol.png"));
         camera = new OrthographicCamera();
 
-        font = new BitmapFont(Gdx.files.internal("PressStart2P.fnt"),false);
+        font = new BitmapFont(Gdx.files.internal("fonts/JungleRoarRegular.fnt"),false);
     }
 
 

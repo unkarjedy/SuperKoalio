@@ -1,6 +1,5 @@
 package com.unkarjedy.platformer.controller;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.unkarjedy.platformer.model.Player;
 import com.unkarjedy.platformer.utils.ResourceManager;
@@ -22,11 +21,11 @@ public class PlayerController extends GameObjectController {
     private Sound jumpSound;
     private Sound hurtSound;
 
-    private Cell previousCollidedHazardCell;
+    private long hazardLastHit;
 
     {
-        jumpSound  = ResourceManager.manager.get("jump.wav", Sound.class);
-        hurtSound  = ResourceManager.manager.get("hurt.wav", Sound.class);
+        jumpSound = ResourceManager.get("jump.wav", Sound.class);
+        hurtSound = ResourceManager.get("hurt.wav", Sound.class);
     }
 
 
@@ -67,13 +66,7 @@ public class PlayerController extends GameObjectController {
 
 
     public void update(float dt) {
-        if ((jumpingPressed && ((System.currentTimeMillis() - jumpPressedTime) >= Player.LONG_JUMP_PRESS))) {
-            jumpingPressed = false;
-        } else {
-            if (jumpingPressed && player.getState().equals(Player.State.Jumping)) {
-                player.getVelocity().y = Player.MAX_JUMP_SPEED;
-            }
-        }
+        updateJumping();
 
         if (player.getState() != Player.State.Falling) {
             if (player.getVelocity().y < 0) {
@@ -96,6 +89,21 @@ public class PlayerController extends GameObjectController {
         }
     }
 
+    private void updateJumping() {
+        if (!jumpingPressed)
+            return;
+
+        if (jumpButtonIsPressedTooLong()) {
+            jumpingPressed = false;
+        } else if (player.getState().equals(Player.State.Jumping)) {
+            player.getVelocity().y = Player.MAX_JUMP_SPEED;
+        }
+    }
+
+    private boolean jumpButtonIsPressedTooLong() {
+        return (System.currentTimeMillis() - jumpPressedTime) >= Player.LONG_JUMP_PRESS;
+    }
+
     public void stopJump() {
         player.setState(Player.State.Falling);
         jumpingPressed = false;
@@ -107,8 +115,8 @@ public class PlayerController extends GameObjectController {
 
     @Override
     public void onLevelTileCollided(LayerType type, Cell cell, boolean isXAxis) {
-        if(LayerType.WALLS == type) {
-            if(!isXAxis){
+        if (LayerType.WALLS == type) {
+            if (!isXAxis) {
                 if (player.getVelocity().y > 0) {
                     player.setState(Player.State.Falling);
                 } else {
@@ -116,18 +124,19 @@ public class PlayerController extends GameObjectController {
                 }
             }
         }
-        if(LayerType.HAZZARDS == type) {
-            player.decreaseLives();
-            if(player.getLives() > 0){
-                playerStateListner.onPlayerLivesDecreased();
-            } else {
-                playerStateListner.onPlayerDead();
-            }
+        if (LayerType.HAZZARDS == type) {
+            if (System.currentTimeMillis() - hazardLastHit > 1000) {
+                hazardLastHit = System.currentTimeMillis();
 
-            if(cell != previousCollidedHazardCell)
+                player.decreaseLives();
                 hurtSound.play();
 
-            previousCollidedHazardCell = cell;
+                if (player.getLives() > 0) {
+                    playerStateListner.onPlayerLivesDecreased();
+                } else {
+                    playerStateListner.onPlayerDead();
+                }
+            }
         }
 
     }

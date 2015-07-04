@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
+import com.unkarjedy.platformer.utils.ResourceManager;
 
 /**
  * Created by Dima Naumenko on 01.07.2015.
@@ -35,7 +36,7 @@ public class Player extends GameObject {
     static int tileWidth = 18;
     static int tileHeight = 26;
     static {
-        Texture koalaTexture = new Texture("koalio.png");
+        Texture koalaTexture = ResourceManager.get("koalio.png", Texture.class);
         TextureRegion[] regions = TextureRegion.split(koalaTexture, tileWidth, tileHeight)[0];
         stand = new Animation(0, regions[0]);
         jump = new Animation(0, regions[1]);
@@ -121,7 +122,7 @@ public class Player extends GameObject {
             sb.draw(getFrame(), getPosition().x, getPosition().y, getWidth(), getHeight());
         }
         else{
-            sb.draw(getFrame(), getPosition().x + getWidth(), getPosition().y, - getWidth(), getHeight());
+            sb.draw(getFrame(), getPosition().x + getWidth(), getPosition().y, -getWidth(), getHeight());
         }
     }
 }

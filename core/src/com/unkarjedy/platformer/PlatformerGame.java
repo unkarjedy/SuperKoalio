@@ -8,11 +8,15 @@ import com.unkarjedy.platformer.view.SplashScreen;
 
 public class PlatformerGame extends Game {
 
+	MainMenu mainMenu;
+
 	@Override
 	public void create() {
-//		setScreen(new GameScreen());
-//		setScreen(new SplashScreen(this));
-		setScreen(new MainMenu(this));
+		mainMenu = new MainMenu(this);
+		goToMenu();
 	}
 
+	public void goToMenu() {
+		setScreen(mainMenu);
+	}
 }

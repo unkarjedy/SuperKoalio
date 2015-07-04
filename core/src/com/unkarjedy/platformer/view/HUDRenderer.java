@@ -1,4 +1,4 @@
-package com.unkarjedy.platformer.controller;
+package com.unkarjedy.platformer.view;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -29,7 +29,7 @@ public class HUDRenderer {
     {
         sb = new SpriteBatch();
         defalutBatchColor = sb.getColor();
-        heart = ResourceManager.manager.get("heart.png");
+        heart = ResourceManager.get("heart.png", Texture.class);
         heartSprite = new Sprite(heart);
         camera = new OrthographicCamera();
     }

@@ -1,16 +1,13 @@
 package com.unkarjedy.platformer.view;
 
 
-import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.unkarjedy.platformer.PlatformerGame;
 import com.unkarjedy.platformer.utils.ResourceManager;
 
 /**
@@ -18,18 +15,17 @@ import com.unkarjedy.platformer.utils.ResourceManager;
  */
 public class GameOverScreen implements Screen {
 
-    private Game game;
+    private PlatformerGame game;
 
     private OrthographicCamera camera;
     private GlyphLayout glyphLayout;
     private BitmapFont font;
     private SpriteBatch sb;
 
-    public GameOverScreen(Game game) {
+    public GameOverScreen(PlatformerGame game) {
         this.game = game;
+        create();
     }
-
-
 
     @Override
     public void render(float delta) {
@@ -39,16 +35,24 @@ public class GameOverScreen implements Screen {
         sb.begin();
         font.draw(sb, glyphLayout, -glyphLayout.width / 2, 0);
         sb.end();
+
+        if(Gdx.input.isTouched() || Gdx.input.isKeyJustPressed(Input.Keys.ANY_KEY))
+            game.goToMenu();
     }
 
-    @Override
-    public void show() {
+
+    private void create() {
         sb = new SpriteBatch();
         camera = new OrthographicCamera();
 
         glyphLayout = new GlyphLayout();
-        font = ResourceManager.manager.get("PressStart2P.fnt");
+        font = ResourceManager.get("JungleRoarRegular.fnt", BitmapFont.class);
         glyphLayout.setText(font, "Game over");
+    }
+
+    @Override
+    public void show() {
+
     }
 
     @Override
@@ -57,8 +61,6 @@ public class GameOverScreen implements Screen {
         camera.viewportHeight = height;
 //        camera.position.set(width / 2, height / 2, 0);
         camera.update();
-
-
     }
 
     @Override
