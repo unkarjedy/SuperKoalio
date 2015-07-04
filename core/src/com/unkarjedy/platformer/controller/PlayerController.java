@@ -126,19 +126,23 @@ public class PlayerController extends GameObjectController {
         }
         if (LayerType.HAZZARDS == type) {
             if (System.currentTimeMillis() - hazardLastHit > 1000) {
-                hazardLastHit = System.currentTimeMillis();
-
-                player.decreaseLives();
-                hurtSound.play();
-
-                if (player.getLives() > 0) {
-                    playerStateListner.onPlayerLivesDecreased();
-                } else {
-                    playerStateListner.onPlayerDead();
-                }
+                playerIsHit();
             }
         }
 
+    }
+
+    public void playerIsHit() {
+        hazardLastHit = System.currentTimeMillis();
+
+        player.decreaseLives();
+        hurtSound.play();
+
+        if (player.getLives() > 0) {
+            playerStateListner.onPlayerLivesDecreased();
+        } else {
+            playerStateListner.onPlayerDead();
+        }
     }
 
     public void setPlayerStateListner(PlayerStateListner playerStateListner) {

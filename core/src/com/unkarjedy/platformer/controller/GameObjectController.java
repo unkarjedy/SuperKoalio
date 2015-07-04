@@ -1,9 +1,7 @@
 package com.unkarjedy.platformer.controller;
 
-import com.unkarjedy.platformer.model.GameLevel;
 import com.unkarjedy.platformer.model.GameObject;
-
-import java.util.Collection;
+import com.unkarjedy.platformer.utils.physics.CollisionListner;
 
 /**
  * Created by Dima Naumenko on 03.07.2015.

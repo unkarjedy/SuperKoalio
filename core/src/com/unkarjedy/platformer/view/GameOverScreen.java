@@ -4,9 +4,13 @@ package com.unkarjedy.platformer.view;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.sun.corba.se.impl.orb.ParserTable;
 import com.unkarjedy.platformer.PlatformerGame;
 import com.unkarjedy.platformer.utils.ResourceManager;
 
@@ -22,6 +26,17 @@ public class GameOverScreen implements Screen {
     private BitmapFont font;
     private SpriteBatch sb;
 
+    Sprite sadKoala;
+
+    static String[] sadKoalas = new String[]{
+                "koala_sad1.jpg",
+                "koala_sad2.jpg",
+                "koala_sad3.jpg",
+                "koala_sad4.jpg",
+                "koala_sad5.jpg",
+        };
+    static int currentKoala = (int) (Math.random() * sadKoalas.length);
+
     public GameOverScreen(PlatformerGame game) {
         this.game = game;
         create();
@@ -33,10 +48,13 @@ public class GameOverScreen implements Screen {
 
         sb.setProjectionMatrix(camera.combined);
         sb.begin();
-        font.draw(sb, glyphLayout, -glyphLayout.width / 2, 0);
+        font.draw(sb, glyphLayout, -glyphLayout.width / 2, camera.viewportHeight * 0.25f);
+        sadKoala.draw(sb);
+//        sb.draw(sadKoala, -sadKoala.getWidth() / 2, -sadKoala.getHeight() + textYPos - 40);
+//        sb.draw(sadKoala, 0, 0);
         sb.end();
 
-        if(Gdx.input.isTouched() || Gdx.input.isKeyJustPressed(Input.Keys.ANY_KEY))
+        if (Gdx.input.isTouched() || Gdx.input.isKeyJustPressed(Input.Keys.ANY_KEY))
             game.goToMenu();
     }
 
@@ -48,6 +66,13 @@ public class GameOverScreen implements Screen {
         glyphLayout = new GlyphLayout();
         font = ResourceManager.get("JungleRoarRegular.fnt", BitmapFont.class);
         glyphLayout.setText(font, "Game over");
+        sadKoala = new Sprite(getRandomSadKoala());
+    }
+
+    private Texture getRandomSadKoala() {
+        String internalPath = ResourceManager.texturesDir + sadKoalas[currentKoala];
+        currentKoala = (currentKoala + 1) % sadKoalas.length;
+        return new Texture(internalPath);
     }
 
     @Override
@@ -61,6 +86,10 @@ public class GameOverScreen implements Screen {
         camera.viewportHeight = height;
 //        camera.position.set(width / 2, height / 2, 0);
         camera.update();
+        float scaleRate = camera.viewportHeight / sadKoala.getHeight() / 2;
+        sadKoala.setSize(sadKoala.getWidth() * scaleRate, sadKoala.getHeight() * scaleRate);
+        sadKoala.setPosition(-sadKoala.getWidth() / 2,
+                -sadKoala.getHeight() + camera.viewportHeight * 0.25f - glyphLayout.height - 40);
     }
 
     @Override

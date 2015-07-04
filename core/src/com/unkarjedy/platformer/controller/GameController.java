@@ -1,6 +1,5 @@
 package com.unkarjedy.platformer.controller;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
@@ -8,6 +7,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.unkarjedy.platformer.PlatformerGame;
 import com.unkarjedy.platformer.model.GameLevel;
 import com.unkarjedy.platformer.model.Player;
+import com.unkarjedy.platformer.utils.physics.PhysicsEngine;
 import com.unkarjedy.platformer.view.GameOverScreen;
 import com.unkarjedy.platformer.view.PlayScreen;
 
@@ -36,8 +36,15 @@ public class GameController implements InputProcessor, PlayerStateListner {
 
         playerController.update(dt);
         clipPlayerPOsitionX();
+        checkIfPlayerFellInHall();
 
         physics.update(dt); // collisions and forces
+    }
+
+    private void checkIfPlayerFellInHall() {
+        if(playerController.getPlayer().getPosition().y < 0){
+            playerController.playerIsHit();
+        }
     }
 
     private void clipPlayerPOsitionX() {

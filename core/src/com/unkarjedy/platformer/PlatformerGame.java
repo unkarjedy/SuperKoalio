@@ -1,6 +1,7 @@
 package com.unkarjedy.platformer;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.unkarjedy.platformer.view.MainMenu;
@@ -18,5 +19,9 @@ public class PlatformerGame extends Game {
 
 	public void goToMenu() {
 		setScreen(mainMenu);
+	}
+
+	public void exit() {
+		Gdx.app.exit();
 	}
 }

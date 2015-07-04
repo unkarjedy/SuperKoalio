@@ -1,10 +1,12 @@
-package com.unkarjedy.platformer.controller;
+package com.unkarjedy.platformer.utils.physics;
 
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool;
+import com.unkarjedy.platformer.controller.GameObjectController;
+import com.unkarjedy.platformer.controller.PlayerController;
 import com.unkarjedy.platformer.model.GameLevel;
 import com.unkarjedy.platformer.model.GameLevel.LayerType;
 import com.unkarjedy.platformer.model.GameObject;
