@@ -121,6 +121,7 @@ public class WorldRenderer {
     public void resize(int width, int height) {
         viewportWidth = viewportHeight * width / height;
         initCamera();
+        hudRenderer.resize(width, height);
     }
 
 }

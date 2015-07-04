@@ -3,6 +3,7 @@ package com.unkarjedy.platformer.controller;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.unkarjedy.platformer.model.Player;
+import com.unkarjedy.platformer.utils.ResourceManager;
 
 import static com.badlogic.gdx.maps.tiled.TiledMapTileLayer.*;
 import static com.unkarjedy.platformer.model.GameLevel.*;
@@ -24,8 +25,8 @@ public class PlayerController extends GameObjectController {
     private Cell previousCollidedHazardCell;
 
     {
-        jumpSound = Gdx.audio.newSound(Gdx.files.internal("jump.wav"));
-        hurtSound = Gdx.audio.newSound(Gdx.files.internal("hurt.wav"));
+        jumpSound  = ResourceManager.manager.get("jump.wav", Sound.class);
+        hurtSound  = ResourceManager.manager.get("hurt.wav", Sound.class);
     }
 
 

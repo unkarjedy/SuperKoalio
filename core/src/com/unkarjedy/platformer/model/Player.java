@@ -4,7 +4,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
-import com.unkarjedy.platformer.utils.TexturePool;
 
 /**
  * Created by Dima Naumenko on 01.07.2015.
@@ -110,5 +109,8 @@ public class Player extends GameObject {
 
     public void decreaseLives() {
         lives--;
+        if(lives < 0){
+            lives = 0;
+        }
     }
 }

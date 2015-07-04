@@ -3,11 +3,11 @@ package com.unkarjedy.platformer.model;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Vector2;
+import com.unkarjedy.platformer.utils.ResourceManager;
 
 /**
  * Created by Dima Naumenko on 01.07.2015.
@@ -32,8 +32,7 @@ public class GameLevel {
         wallsLayer = (TiledMapTileLayer) map.getLayers().get("walls");
         hazardsLayer = (TiledMapTileLayer) map.getLayers().get("hazards");
 
-        FileHandle soundFile = Gdx.files.internal("level1.mp3");
-        levelSound = Gdx.audio.newSound(soundFile);
+        levelSound = ResourceManager.manager.get("level1.mp3", Sound.class); //SoundPool.getSound("level1.mp3");
     }
 
     public TiledMap getMap() {
