@@ -27,10 +27,11 @@ public class GameLevel {
 
     public GameLevel(String tilemapName){
         map = new TmxMapLoader().load(tilemapName);
-        playerSpawnPosition = new Vector2(10, 5);
         backgroundLayer = (TiledMapTileLayer) map.getLayers().get("background");
         wallsLayer = (TiledMapTileLayer) map.getLayers().get("walls");
         hazardsLayer = (TiledMapTileLayer) map.getLayers().get("hazards");
+
+        playerSpawnPosition = new Vector2(10, 5);
 
         levelSound = ResourceManager.manager.get("level1.mp3", Sound.class); //SoundPool.getSound("level1.mp3");
     }

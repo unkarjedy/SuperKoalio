@@ -1,70 +1,64 @@
 package com.unkarjedy.platformer.view;
 
+
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.unkarjedy.platformer.utils.ResourceManager;
 
 /**
- * Created by Dima Naumenko on 03.07.2015.
+ * Created by Dima Naumenko on 04.07.2015.
  */
-public class SplashScreen implements Screen {
+public class GameOverScreen implements Screen {
+
+    private Game game;
 
     private OrthographicCamera camera;
-    private Sprite splash;
-    private Game game;
+    private GlyphLayout glyphLayout;
+    private BitmapFont font;
     private SpriteBatch sb;
 
-    BitmapFont font;
-
-
-    public SplashScreen(Game game) {
+    public GameOverScreen(Game game) {
         this.game = game;
     }
 
+
+
     @Override
-    public void render(float delta)
-    {
+    public void render(float delta) {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         sb.setProjectionMatrix(camera.combined);
         sb.begin();
-        sb.draw(splash, 0, 0, camera.viewportWidth, camera.viewportHeight);
-        int progress = (int) (100 * ResourceManager.manager.getProgress());
-        font.draw(sb, "Loading: " + progress + "%", 40, 40);
+        font.draw(sb, glyphLayout, -glyphLayout.width / 2, 0);
         sb.end();
-
-        if(ResourceManager.manager.update())
-            game.setScreen(new GameScreen(game));
     }
 
     @Override
     public void show() {
-        ResourceManager.load();
-
         sb = new SpriteBatch();
-        splash = new Sprite(new Texture("Koalaabilitylol.png"));
         camera = new OrthographicCamera();
 
-        font = new BitmapFont(Gdx.files.internal("PressStart2P.fnt"),false);
+        glyphLayout = new GlyphLayout();
+        font = ResourceManager.manager.get("PressStart2P.fnt");
+        glyphLayout.setText(font, "Game over");
     }
-
 
     @Override
     public void resize(int width, int height) {
         camera.viewportWidth = width;
         camera.viewportHeight = height;
-        camera.position.set(width / 2, height / 2, 0);
+//        camera.position.set(width / 2, height / 2, 0);
         camera.update();
+
+
     }
 
     @Override
@@ -84,7 +78,6 @@ public class SplashScreen implements Screen {
 
     @Override
     public void dispose() {
-        sb.dispose();
-    }
 
+    }
 }

@@ -1,5 +1,6 @@
 package com.unkarjedy.platformer.controller;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.GL20;
@@ -16,7 +17,7 @@ import static com.unkarjedy.platformer.utils.Constants.*;
 /**
  * Created by Dima Naumenko on 01.07.2015.
  */
-public class WorldRenderer {
+public class GameRenderer {
 
     private static float UNIT_SCALE = 1 / 16f;
     private static float viewportWidth = 30;
@@ -32,13 +33,13 @@ public class WorldRenderer {
     Player player;
     GameController gameController;
 
-    public WorldRenderer() {
+    public GameRenderer(Game game) {
         loadLevel("level1.tmx");
         initCamera();
         createPlayer();
         setDefaultPlayerPosition();
 
-        gameController = new GameController(this, player, level);
+        gameController = new GameController(game, this, player, level);
         Gdx.input.setInputProcessor(gameController);
 
         // PLACE SHIT CODE HERE
@@ -106,15 +107,8 @@ public class WorldRenderer {
     }
 
     private void renderPlayer() {
-        TextureRegion frame = player.getFrame();
-
         sb.begin();
-        if (player.isFacesRight()){
-            sb.draw(frame, player.getPosition().x, player.getPosition().y, player.getWidth(), player.getHeight());
-        }
-        else{
-            sb.draw(frame, player.getPosition().x + player.getWidth(), player.getPosition().y, -player.getWidth(), player.getHeight());
-        }
+        player.render(sb);
         sb.end();
     }
 

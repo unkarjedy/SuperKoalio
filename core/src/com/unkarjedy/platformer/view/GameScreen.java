@@ -1,18 +1,19 @@
 package com.unkarjedy.platformer.view;
 
-import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.GL20;
-import com.unkarjedy.platformer.controller.WorldRenderer;
+import com.unkarjedy.platformer.controller.GameRenderer;
 
 /**
  * Created by Dima Naumenko on 01.07.2015.
  */
 public class GameScreen implements Screen {
-    private WorldRenderer renderer;
+    private final Game game;
+    private GameRenderer renderer;
 
-    public GameScreen(){
-        renderer = new WorldRenderer();
+    public GameScreen(Game game) {
+        this.game = game;
+        renderer = new GameRenderer(game);
     }
 
     @Override

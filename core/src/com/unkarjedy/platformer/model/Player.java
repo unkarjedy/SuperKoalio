@@ -2,6 +2,7 @@ package com.unkarjedy.platformer.model;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
@@ -13,7 +14,7 @@ public class Player extends GameObject {
     public static final float MAX_VELOCITY = 10f;
     public static float MAX_JUMP_SPEED = 14f;
     public static final long LONG_JUMP_PRESS = 250;
-    public static final int DEFAULT_LIVES = 3;
+    public static final int DEFAULT_LIVES = 1;
 
     public enum State {
         Standing, Walking, Jumping, Falling, Dead
@@ -111,6 +112,16 @@ public class Player extends GameObject {
         lives--;
         if(lives < 0){
             lives = 0;
+        }
+    }
+
+    @Override
+    public void render(SpriteBatch sb) {
+        if (isFacesRight()){
+            sb.draw(getFrame(), getPosition().x, getPosition().y, getWidth(), getHeight());
+        }
+        else{
+            sb.draw(getFrame(), getPosition().x + getWidth(), getPosition().y, - getWidth(), getHeight());
         }
     }
 }
