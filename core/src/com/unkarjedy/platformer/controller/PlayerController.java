@@ -2,7 +2,7 @@ package com.unkarjedy.platformer.controller;
 
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.math.Vector2;
-import com.unkarjedy.platformer.controller.physics.TilesCollisionDetector;
+import com.unkarjedy.platformer.physics.TilesCollisionDetector;
 import com.unkarjedy.platformer.model.GameLevel;
 import com.unkarjedy.platformer.model.Player;
 import com.unkarjedy.platformer.utils.ResourceManager;
@@ -11,8 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.badlogic.gdx.maps.tiled.TiledMapTileLayer.*;
-import static com.unkarjedy.platformer.controller.physics.TilesCollisionDetector.*;
-import static com.unkarjedy.platformer.controller.physics.TilesCollisionDetector.Collision.*;
+import static com.unkarjedy.platformer.physics.TilesCollisionDetector.*;
+import static com.unkarjedy.platformer.physics.TilesCollisionDetector.Collision.*;
 import static com.unkarjedy.platformer.model.GameLevel.*;
 import static com.unkarjedy.platformer.model.GameLevel.LayerType.*;
 import static com.unkarjedy.platformer.model.GameLevel.LayerType.HAZZARDS;

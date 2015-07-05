@@ -1,16 +1,16 @@
-package com.unkarjedy.platformer.controller.physics;
+package com.unkarjedy.platformer.physics;
 
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool;
-import com.unkarjedy.platformer.controller.physics.TilesCollisionDetector.Collision.CollideTile;
+import com.unkarjedy.platformer.physics.TilesCollisionDetector.Collision.CollideTile;
 import com.unkarjedy.platformer.model.GameObject;
 
 import static com.badlogic.gdx.maps.tiled.TiledMapTileLayer.*;
-import static com.unkarjedy.platformer.controller.physics.TilesCollisionDetector.Collision.*;
-import static com.unkarjedy.platformer.controller.physics.TilesCollisionDetector.Collision.RIGHT;
+import static com.unkarjedy.platformer.physics.TilesCollisionDetector.Collision.*;
+import static com.unkarjedy.platformer.physics.TilesCollisionDetector.Collision.RIGHT;
 
 /**
  * Created by Dima Naumenko on 05.07.2015.

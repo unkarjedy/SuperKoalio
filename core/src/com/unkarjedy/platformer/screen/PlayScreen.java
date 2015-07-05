@@ -11,11 +11,15 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.unkarjedy.platformer.PlatformerGame;
 import com.unkarjedy.platformer.controller.CameraController;
 import com.unkarjedy.platformer.controller.GameController;
+import com.unkarjedy.platformer.model.Enemy;
 import com.unkarjedy.platformer.model.GameLevel;
 import com.unkarjedy.platformer.model.LevelScore;
 import com.unkarjedy.platformer.model.Player;
 import com.unkarjedy.platformer.renderer.HUDRenderer;
 import com.unkarjedy.platformer.utils.MemoryLogger;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.unkarjedy.platformer.utils.Constants.MIN_DELTA_TIME;
 
@@ -40,6 +44,7 @@ public class PlayScreen implements Screen {
     private GameLevel level;
     private LevelScore levelScore;
     private Player player;
+    private List<Enemy> enemies = new ArrayList<>();
     private GameController gameController;
     private CameraController cameraController;
 
@@ -49,7 +54,6 @@ public class PlayScreen implements Screen {
         loadLevel("level1.tmx");
         createCamera();
         createPlayer();
-        setDefaultPlayerPosition();
 
         hudRenderer = new HUDRenderer(player, levelScore);
         gameController = new GameController(this);
@@ -70,13 +74,14 @@ public class PlayScreen implements Screen {
         Gdx.gl.glClearColor(0.1f, 0.1f, 0.1f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        float dt = Gdx.graphics.getDeltaTime();
-
-        update(dt);
+        update(Gdx.graphics.getDeltaTime());
 
         sb.setProjectionMatrix(camera.combined);
         renderLevel();
-        renderPlayer();
+
+        player.render(sb);
+        for(Enemy enemy : enemies)
+            enemy.render(sb);
 
         hudRenderer.render();
 
@@ -105,6 +110,8 @@ public class PlayScreen implements Screen {
         player = new Player();
         player.setWidth(UNIT_SCALE * player.getWidth());
         player.setHeight(UNIT_SCALE * player.getHeight());
+
+        setDefaultPlayerPosition();
     }
 
     private void update(float dt) {
@@ -123,11 +130,6 @@ public class PlayScreen implements Screen {
         renderer.render();
     }
 
-    private void renderPlayer() {
-        sb.begin();
-        player.render(sb);
-        sb.end();
-    }
 
 
     @Override

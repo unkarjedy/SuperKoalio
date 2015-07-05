@@ -25,11 +25,11 @@ public abstract class Person extends GameObject {
     protected boolean facesRight = true;
     protected boolean grounded = false;
 
-    static protected Animation stand;
-    static protected Animation walk;
-    static protected Animation jump;
-    static protected Animation fall;
-    static protected Animation die;
+    protected Animation stand;
+    protected Animation walk;
+    protected Animation jump;
+    protected Animation fall;
+    protected Animation die;
 
     public Person() {
         position = new Vector2();
@@ -114,11 +114,13 @@ public abstract class Person extends GameObject {
 
     @Override
     public void render(SpriteBatch sb) {
+        sb.begin();
         if (isFacesRight()){
             sb.draw(getFrame(), getPosition().x, getPosition().y, getWidth(), getHeight());
         }
         else{
             sb.draw(getFrame(), getPosition().x + getWidth(), getPosition().y, -getWidth(), getHeight());
         }
+        sb.end();
     }
 }
