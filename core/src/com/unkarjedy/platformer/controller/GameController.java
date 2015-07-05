@@ -1,30 +1,34 @@
 package com.unkarjedy.platformer.controller;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.unkarjedy.platformer.PlatformerGame;
+import com.unkarjedy.platformer.controller.gameinputs.GameInputsController;
 import com.unkarjedy.platformer.model.GameLevel;
 import com.unkarjedy.platformer.model.LevelScore;
 import com.unkarjedy.platformer.model.Player;
 import com.unkarjedy.platformer.controller.physics.PhysicsEngine;
-import com.unkarjedy.platformer.view.GameOverScreen;
-import com.unkarjedy.platformer.view.LevelCompletedScreen;
-import com.unkarjedy.platformer.view.PlayScreen;
+import com.unkarjedy.platformer.screen.GameOverScreen;
+import com.unkarjedy.platformer.screen.LevelCompletedScreen;
+import com.unkarjedy.platformer.screen.PlayScreen;
 
 /**
  * Created by Dima Naumenko on 02.07.2015.
  */
-public class GameController implements InputProcessor, PlayerStateListner {;
+public class GameController implements InputProcessor, PlayerActionsListner {;
+
     private PlatformerGame game;
     private PlayScreen playScreen;
+    private GameInputsController gameInputs;
 
     private PlayerController playerController;
     private PhysicsEngine physics;
+
     private GameLevel level;
     private LevelScore levelScore;
 
     public GameController(PlayScreen playScreen) {
+        this.gameInputs = playScreen.getGame().getGameInputs();
         this.game = playScreen.getGame();
         this.playScreen = playScreen;
         this.level = playScreen.getLevel();
@@ -46,13 +50,13 @@ public class GameController implements InputProcessor, PlayerStateListner {;
     }
 
     private void checkPressedKeys() {
-        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+        if (gameInputs.moveLeftPressed()) {
             playerController.moveLeft();
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+        if (gameInputs.moveRightPressed()) {
             playerController.moveRight();
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
+        if (gameInputs.jumpPressed()) {
             playerController.jump();
         }
     }
@@ -60,7 +64,6 @@ public class GameController implements InputProcessor, PlayerStateListner {;
 
     private void initPhysicsEngine() {
         physics = new PhysicsEngine(level);
-        //physics.setLevel(level);
         physics.setPlayerController(playerController);
     }
 

@@ -1,7 +1,6 @@
 package com.unkarjedy.platformer.controller;
 
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.Vector2;
 import com.unkarjedy.platformer.controller.physics.TilesCollisionDetector;
 import com.unkarjedy.platformer.model.GameLevel;
@@ -28,7 +27,7 @@ public class PlayerController extends GameObjectController {
     private boolean jumpingPressed;
     private long jumpPressedTime;
 
-    private List<PlayerStateListner> playerStateListners = new ArrayList<>();
+    private List<PlayerActionsListner> playerStateListners = new ArrayList<>();
 
     TilesCollisionDetector hazardsColliderDetector;
     TilesCollisionDetector starsColliderDetector;
@@ -57,7 +56,7 @@ public class PlayerController extends GameObjectController {
     }
 
     public void moveLeft() {
-        player.getVelocity().x = -Player.MAX_VELOCITY;
+        player.getVelocity().x = -Player.getMaxVelocity();
         if (player.isGrounded()) {
             player.setState(Player.State.Walking);
         }
@@ -65,7 +64,7 @@ public class PlayerController extends GameObjectController {
     }
 
     public void moveRight() {
-        player.getVelocity().x = Player.MAX_VELOCITY;
+        player.getVelocity().x = Player.getMaxVelocity();
         if (player.isGrounded()) {
             player.setState(Player.State.Walking);
         }
@@ -80,7 +79,7 @@ public class PlayerController extends GameObjectController {
             player.setGrounded(false);
             jumpPressedTime = System.currentTimeMillis();
             player.setState(Player.State.Jumping);
-            player.getVelocity().y = Player.MAX_JUMP_SPEED;
+            player.getVelocity().y = Player.getMaxVelocity();
 
             jumpSound.play();
         }
@@ -103,7 +102,7 @@ public class PlayerController extends GameObjectController {
 
     private void checkIfFinishReached() {
         if(level.getFinish().overlaps(player.getBoundingRect())){
-            for(PlayerStateListner listner : playerStateListners){
+            for(PlayerActionsListner listner : playerStateListners){
                 listner.playerReachedLevelFinish();
             }
         }
@@ -134,8 +133,8 @@ public class PlayerController extends GameObjectController {
 
     private void clampVelocities() {
         // clamp the velocity to the maximum, x-axis only
-        if (Math.abs(player.getVelocity().x) > Player.MAX_VELOCITY) {
-            player.getVelocity().x = Math.signum(player.getVelocity().x) * Player.MAX_VELOCITY;
+        if (Math.abs(player.getVelocity().x) > Player.getMaxVelocity()) {
+            player.getVelocity().x = Math.signum(player.getVelocity().x) * Player.getMaxVelocity();
         }
 
         // clamp the velocity to 0 if it's < 1, and set the state to standing
@@ -163,7 +162,7 @@ public class PlayerController extends GameObjectController {
         if (jumpButtonIsPressedTooLong()) {
             jumpingPressed = false;
         } else if (player.getState().equals(Player.State.Jumping)) {
-            player.getVelocity().y = Player.MAX_JUMP_SPEED;
+            player.getVelocity().y = Player.getMaxJumpSpeed();
         }
     }
 
@@ -203,7 +202,7 @@ public class PlayerController extends GameObjectController {
         if (STARS == type) {
             level.getStarsLayer().setCell((int) tile.rect.x, (int) tile.rect.y, null);
             starCollected.play();
-            for(PlayerStateListner playerStateListner : playerStateListners)
+            for(PlayerActionsListner playerStateListner : playerStateListners)
                 playerStateListner.playerGetsCoin();
         }
 
@@ -214,15 +213,15 @@ public class PlayerController extends GameObjectController {
         hurtSound.play();
 
         if (player.getLives() > 0) {
-            for(PlayerStateListner playerStateListner : playerStateListners)
+            for(PlayerActionsListner playerStateListner : playerStateListners)
                 playerStateListner.playerIsHit(respawn);
         } else {
-            for(PlayerStateListner playerStateListner : playerStateListners)
+            for(PlayerActionsListner playerStateListner : playerStateListners)
                 playerStateListner.playerDead();
         }
     }
 
-    public void addPlayerStateListner(PlayerStateListner playerStateListner) {
+    public void addPlayerStateListner(PlayerActionsListner playerStateListner) {
         playerStateListners.add(playerStateListner);
     }
 

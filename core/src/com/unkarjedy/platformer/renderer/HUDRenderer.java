@@ -1,13 +1,12 @@
-package com.unkarjedy.platformer.view;
+package com.unkarjedy.platformer.renderer;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.unkarjedy.platformer.controller.PlayerStateListner;
+import com.unkarjedy.platformer.controller.PlayerActionsListner;
 import com.unkarjedy.platformer.model.LevelScore;
 import com.unkarjedy.platformer.model.Player;
 import com.unkarjedy.platformer.utils.ResourceManager;
@@ -15,7 +14,7 @@ import com.unkarjedy.platformer.utils.ResourceManager;
 /**
  * Created by Dima Naumenko on 03.07.2015.
  */
-public class HUDRenderer implements PlayerStateListner {
+public class HUDRenderer implements PlayerActionsListner {
 
     private Player player;
     private LevelScore levelScore;
@@ -45,7 +44,7 @@ public class HUDRenderer implements PlayerStateListner {
 
         heart = ResourceManager.get("heart.png", Texture.class);
 
-        hearts = new Image[player.DEFAULT_LIVES];
+        hearts = new Image[player.getDefaultLives()];
         for (int i = 0; i < hearts.length; i++) {
             hearts[i] = new Image(heart);
             hearts[i].setPosition(i * heart.getWidth() + GAP_SIZE, stage.getHeight() - heart.getHeight() - GAP_SIZE);

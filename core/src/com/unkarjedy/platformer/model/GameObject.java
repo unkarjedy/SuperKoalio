@@ -2,20 +2,19 @@ package com.unkarjedy.platformer.model;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
 /**
  * Created by Dima Naumenko on 01.07.2015.
  */
-public class GameObject {
+public abstract class GameObject {
 
     protected Vector2 position;
     protected Vector2 velocity;
 
     protected float width;
     protected float height;
-
-    protected Texture texture;
 
     public void update(float dt) {
         velocity.scl(dt);
@@ -55,20 +54,15 @@ public class GameObject {
         this.height = height;
     }
 
-    public Texture getTexture() {
-        return texture;
-    }
-
-    public void setTexture(Texture texture) {
-        this.texture = texture;
-    }
-
     public void applyAccel(Vector2 accel, float dt) {
         Vector2 accelStep = accel.cpy().scl(dt);
         velocity.add(accelStep);
     }
 
-    public void render(SpriteBatch sb) {
-
+    public Rectangle getBoundingRect() {
+        return new Rectangle(position.x, position.y, width, height);
     }
+
+    abstract public void render(SpriteBatch sb);
+
 }

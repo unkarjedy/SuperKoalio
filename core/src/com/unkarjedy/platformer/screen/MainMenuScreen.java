@@ -1,29 +1,18 @@
-package com.unkarjedy.platformer.view;
+package com.unkarjedy.platformer.screen;
 
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.*;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.utils.Scaling;
-import com.badlogic.gdx.utils.viewport.ExtendViewport;
-import com.badlogic.gdx.utils.viewport.StretchViewport;
-import com.badlogic.gdx.utils.viewport.Viewport;
 import com.unkarjedy.platformer.PlatformerGame;
-import com.unkarjedy.platformer.utils.ResourceManager;
 
 import static com.badlogic.gdx.scenes.scene2d.ui.TextButton.*;
 
@@ -31,7 +20,7 @@ import static com.badlogic.gdx.scenes.scene2d.ui.TextButton.*;
 /**
  * Created by Dima Naumenko on 03.07.2015.
  */
-public class MainMenu implements Screen {
+public class MainMenuScreen implements Screen {
 
     private static final float BUTTON_GAP_SIZE = 20;
     private PlatformerGame game;
@@ -44,7 +33,7 @@ public class MainMenu implements Screen {
     private TextButtonStyle textButtonStyle;
     private Image backgroundImage;
 
-    public MainMenu(PlatformerGame game) {
+    public MainMenuScreen(PlatformerGame game) {
         this.game = game;
 //        create();
     }
@@ -61,7 +50,7 @@ public class MainMenu implements Screen {
 
     private void update(float dt) {
         if(Gdx.input.isKeyJustPressed(Input.Keys.ENTER)){
-            game.setScreen(new SplashScreen(game));
+            game.setScreen(new LoadLevelScreen(game));
         }
     }
 
@@ -83,7 +72,7 @@ public class MainMenu implements Screen {
         playButton.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new SplashScreen(game));
+                game.setScreen(new LoadLevelScreen(game));
             }
         });
 

@@ -1,4 +1,4 @@
-package com.unkarjedy.platformer.view;
+package com.unkarjedy.platformer.screen;
 
 
 import com.badlogic.gdx.*;

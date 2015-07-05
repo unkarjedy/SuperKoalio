@@ -1,4 +1,4 @@
-package com.unkarjedy.platformer.view;
+package com.unkarjedy.platformer.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -14,6 +14,7 @@ import com.unkarjedy.platformer.controller.GameController;
 import com.unkarjedy.platformer.model.GameLevel;
 import com.unkarjedy.platformer.model.LevelScore;
 import com.unkarjedy.platformer.model.Player;
+import com.unkarjedy.platformer.renderer.HUDRenderer;
 import com.unkarjedy.platformer.utils.MemoryLogger;
 
 import static com.unkarjedy.platformer.utils.Constants.MIN_DELTA_TIME;

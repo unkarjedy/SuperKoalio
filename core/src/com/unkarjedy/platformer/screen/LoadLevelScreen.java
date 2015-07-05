@@ -1,6 +1,5 @@
-package com.unkarjedy.platformer.view;
+package com.unkarjedy.platformer.screen;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
@@ -15,7 +14,7 @@ import com.unkarjedy.platformer.utils.ResourceManager;
 /**
  * Created by Dima Naumenko on 03.07.2015.
  */
-public class SplashScreen implements Screen {
+public class LoadLevelScreen implements Screen {
 
     private OrthographicCamera camera;
     private Sprite splash;
@@ -24,7 +23,7 @@ public class SplashScreen implements Screen {
 
     BitmapFont font;
 
-    public SplashScreen(PlatformerGame game) {
+    public LoadLevelScreen(PlatformerGame game) {
         this.game = game;
     }
 

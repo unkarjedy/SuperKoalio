@@ -2,18 +2,21 @@ package com.unkarjedy.platformer;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.unkarjedy.platformer.view.MainMenu;
-import com.unkarjedy.platformer.view.SplashScreen;
+import com.unkarjedy.platformer.controller.gameinputs.GameInputsController;
+import com.unkarjedy.platformer.screen.MainMenuScreen;
 
 public class PlatformerGame extends Game {
 
-	MainMenu mainMenu;
+	MainMenuScreen mainMenu;
+	private GameInputsController gameInputs;
+
+	public PlatformerGame(GameInputsController gameInputs) {
+		this.gameInputs = gameInputs;
+	}
 
 	@Override
 	public void create() {
-		mainMenu = new MainMenu(this);
+		mainMenu = new MainMenuScreen(this);
 		goToMenu();
 	}
 
@@ -23,5 +26,9 @@ public class PlatformerGame extends Game {
 
 	public void exit() {
 		Gdx.app.exit();
+	}
+
+	public GameInputsController getGameInputs() {
+		return gameInputs;
 	}
 }
