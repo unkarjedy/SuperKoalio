@@ -9,8 +9,6 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.sun.corba.se.impl.orb.ParserTable;
 import com.unkarjedy.platformer.PlatformerGame;
 import com.unkarjedy.platformer.utils.ResourceManager;
 

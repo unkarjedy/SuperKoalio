@@ -7,7 +7,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.unkarjedy.platformer.PlatformerGame;
 import com.unkarjedy.platformer.model.GameLevel;
 import com.unkarjedy.platformer.model.Player;
-import com.unkarjedy.platformer.utils.physics.PhysicsEngine;
+import com.unkarjedy.platformer.controller.physics.PhysicsEngine;
 import com.unkarjedy.platformer.view.GameOverScreen;
 import com.unkarjedy.platformer.view.PlayScreen;
 
@@ -55,9 +55,11 @@ public class GameController implements InputProcessor, PlayerStateListner {
 
         if (playerPosition.x < playerLeftClip) {
             playerPosition.x = playerLeftClip;
+            playerController.getPlayer().getVelocity().x = 0;
         }
         if (playerPosition.x > playerRightClip) {
             playerPosition.x = playerRightClip;
+            playerController.getPlayer().getVelocity().x = 0;
         }
     }
 
@@ -75,8 +77,8 @@ public class GameController implements InputProcessor, PlayerStateListner {
 
 
     private void initPhysicsEngine() {
-        physics = new PhysicsEngine();
-        physics.setLevel(level);
+        physics = new PhysicsEngine(level);
+        //physics.setLevel(level);
         physics.setPlayerController(playerController);
     }
 

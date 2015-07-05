@@ -15,7 +15,7 @@ public class Player extends GameObject {
     public static final float MAX_VELOCITY = 10f;
     public static float MAX_JUMP_SPEED = 14f;
     public static final long LONG_JUMP_PRESS = 250;
-    public static final int DEFAULT_LIVES = 1;
+    public static final int DEFAULT_LIVES = 5;
 
     public enum State {
         Standing, Walking, Jumping, Falling, Dead

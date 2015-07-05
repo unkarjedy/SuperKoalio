@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="212" height="20" tilewidth="16" tileheight="16" nextobjectid="32">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="212" height="20" tilewidth="16" tileheight="16" nextobjectid="75">
  <tileset firstgid="1" name="tileSet-hd" tilewidth="16" tileheight="16">
   <image source="tileSet.png" trans="fe80fe" width="256" height="256"/>
+ </tileset>
+ <tileset firstgid="257" name="sta64" tilewidth="64" tileheight="64">
+  <image source="sta64.png" width="64" height="64"/>
  </tileset>
  <layer name="background" width="212" height="20">
   <data encoding="base64" compression="zlib">
@@ -25,4 +28,9 @@
   <object id="30" x="2010.5" y="252.5" width="35.5" height="33"/>
   <object id="31" x="2693" y="252.5" width="31.5" height="29.5"/>
  </objectgroup>
+ <layer name="stars" width="212" height="20">
+  <data encoding="base64" compression="zlib">
+   eJzt2UkOgCAMAED//wjf6p24IEWpMpOYeFGCbaHEZQEAAAAA3rYWF9Bmr37UFNx3VjdqCv5pltre67mP+vBePfrdZ8/GdG4gSu7MScz7K/cR6kTWoAzr1+jxM3myT/Kdn5Vh/fpyjMvcj84lYw2MOgNd3be+P8P+cSSaS1nnNZPM+UU9MRwvQ39CnNhBH2qpXc2/FQCAmW1hUDFh
+  </data>
+ </layer>
 </map>

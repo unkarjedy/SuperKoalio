@@ -1,8 +1,5 @@
-package com.unkarjedy.platformer.utils.physics;
+package com.unkarjedy.platformer.controller.physics;
 
-import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
-import com.badlogic.gdx.math.Rectangle;
-import com.unkarjedy.platformer.model.GameLevel;
 import com.unkarjedy.platformer.model.GameLevel.LayerType;
 
 import static com.badlogic.gdx.maps.tiled.TiledMapTileLayer.*;
