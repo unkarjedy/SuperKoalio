@@ -47,7 +47,8 @@ public class ResourceManager {
     private static void loadSounds() {
         String[] soundNames = {
                 "jump.wav",
-                "hurt.wav"
+                "hurt.wav",
+                "coin.wav"
         };
 
         for (String fileName : soundNames) {

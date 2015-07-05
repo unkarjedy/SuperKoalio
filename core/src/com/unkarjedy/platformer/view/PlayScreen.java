@@ -12,7 +12,9 @@ import com.unkarjedy.platformer.PlatformerGame;
 import com.unkarjedy.platformer.controller.CameraController;
 import com.unkarjedy.platformer.controller.GameController;
 import com.unkarjedy.platformer.model.GameLevel;
+import com.unkarjedy.platformer.model.LevelScore;
 import com.unkarjedy.platformer.model.Player;
+import com.unkarjedy.platformer.utils.MemoryLogger;
 
 import static com.unkarjedy.platformer.utils.Constants.MIN_DELTA_TIME;
 
@@ -32,8 +34,10 @@ public class PlayScreen implements Screen {
     private SpriteBatch sb = new SpriteBatch();;
     private HUDRenderer hudRenderer;
     private FPSLogger fpsLogger = new FPSLogger();
+    private MemoryLogger memoryLogger = new MemoryLogger();
 
     private GameLevel level;
+    private LevelScore levelScore;
     private Player player;
     private GameController gameController;
     private CameraController cameraController;
@@ -46,7 +50,8 @@ public class PlayScreen implements Screen {
         createPlayer();
         setDefaultPlayerPosition();
 
-        gameController = new GameController(game, this, player, level);
+        hudRenderer = new HUDRenderer(player, levelScore);
+        gameController = new GameController(this);
         Gdx.input.setInputProcessor(gameController);
 
         // PLACE SHIT CODE HERE
@@ -54,8 +59,6 @@ public class PlayScreen implements Screen {
             level.getLevelMusic().setLooping(true);
             level.getLevelMusic().play();
         }
-
-        hudRenderer = new HUDRenderer(player);
 
         cameraController = new CameraController(camera, player, level);
     }
@@ -77,11 +80,14 @@ public class PlayScreen implements Screen {
         hudRenderer.render();
 
         fpsLogger.log();
+        memoryLogger.log();
+
     }
 
     private void loadLevel(String levelFilename) {
-        level = new GameLevel(levelFilename);
+        level = new GameLevel(levelFilename, UNIT_SCALE);
         renderer = new OrthogonalTiledMapRenderer(level.getMap(), UNIT_SCALE);
+        levelScore = new LevelScore(level);
     }
 
     public void setDefaultPlayerPosition() {
@@ -153,5 +159,25 @@ public class PlayScreen implements Screen {
     @Override
     public void dispose() {
         level.getLevelMusic().dispose();
+    }
+
+    public Player getPlayer() {
+        return player;
+    }
+
+    public GameLevel getLevel() {
+        return level;
+    }
+
+    public PlatformerGame getGame() {
+        return game;
+    }
+
+    public LevelScore getLevelScore() {
+        return levelScore;
+    }
+
+    public HUDRenderer getHudRenderer() {
+        return hudRenderer;
     }
 }

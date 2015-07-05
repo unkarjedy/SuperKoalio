@@ -7,6 +7,7 @@ import com.badlogic.gdx.utils.Pool;
 import com.unkarjedy.platformer.controller.GameObjectController;
 import com.unkarjedy.platformer.controller.PlayerController;
 import com.unkarjedy.platformer.controller.physics.TilesCollisionDetector.Collision;
+import com.unkarjedy.platformer.controller.physics.TilesCollisionDetector.Collision.CollideTile;
 import com.unkarjedy.platformer.model.GameLevel;
 import com.unkarjedy.platformer.model.GameLevel.LayerType;
 import com.unkarjedy.platformer.model.GameObject;
@@ -25,7 +26,6 @@ public class PhysicsEngine {
 
     GameLevel level;
     TilesCollisionDetector wallsColliderDetector;
-    TilesCollisionDetector hazardsColliderDetector;
     PlayerController playerController;
 
     Array<Rectangle> tiles;
@@ -51,42 +51,42 @@ public class PhysicsEngine {
     }
 
     public void update(float dt) {
-        for (GameObjectController oc : gameObjectControllers) {
-            oc.getObject().applyAccel(gravity, dt);
-        }
+        applyForces(dt);
 
         playerController.getPlayer().getVelocity().x *= DAMPING;
-
         resolveObjectWallsCollisions(playerController.getPlayer(), dt);
-        resolvePlayerHazardsCollisions(dt);
 
+        applyMovements(dt);
+    }
+
+    private void applyMovements(float dt) {
         for (GameObjectController oc : gameObjectControllers) {
             oc.getObject().update(dt);
         }
     }
 
-    private void resolvePlayerHazardsCollisions(float dt) {
-        Collision collision = hazardsColliderDetector.detectCollisions(playerController.getPlayer(), dt);
-        if(collision.hasCollision())
-            playerController.onLevelTileCollided(LayerType.HAZZARDS, null, false);
+    private void applyForces(float dt) {
+        for (GameObjectController oc : gameObjectControllers) {
+            oc.getObject().applyAccel(gravity, dt);
+        }
     }
 
     private void resolveObjectWallsCollisions(GameObject obj, float dt) {
         Collision collision = wallsColliderDetector.detectCollisions(playerController.getPlayer(), dt);
 
-        Cell xCollision = collision.getCellX();
+        CollideTile xCollision = collision.getTileX();
         if(xCollision != null){
             playerController.onLevelTileCollided(LayerType.WALLS, xCollision, true);
             obj.getVelocity().x = 0;
         }
 
-        Cell yCollision = collision.getCellY();
+        CollideTile yCollision = collision.getTileY();
         if(yCollision != null){
             playerController.onLevelTileCollided(LayerType.WALLS, yCollision, false);
             if (obj.getVelocity().y > 0) {
-                obj.getPosition().y = collision.getTileY().y - obj.getHeight();
+                obj.getPosition().y = collision.getTileY().rect.y - obj.getHeight();
             } else {
-                obj.getPosition().y = collision.getTileY().y + collision.getTileY().height;
+                obj.getPosition().y = collision.getTileY().rect.y + collision.getTileY().rect.height;
             }
             obj.getVelocity().y = 0;
         }
@@ -95,7 +95,6 @@ public class PhysicsEngine {
     public void setLevel(GameLevel level) {
         this.level = level;
         wallsColliderDetector = new TilesCollisionDetector(level.getWallsLayer());
-        hazardsColliderDetector = new TilesCollisionDetector(level.getHazardsLayer());
     }
 
     public void addGameObject(GameObjectController oc) {

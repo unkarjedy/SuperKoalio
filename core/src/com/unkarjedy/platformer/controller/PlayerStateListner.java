@@ -5,7 +5,8 @@ package com.unkarjedy.platformer.controller;
  */
 public interface PlayerStateListner {
 
-    void onPlayerDead();
-    void onPlayerLivesDecreased();
-
+    void playerDead();
+    void playerIsHit(boolean respawn);
+    void playerGetsCoin();
+    void playerReachedLevelFinish();
 }

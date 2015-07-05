@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.unkarjedy.platformer.utils.ResourceManager;
 
@@ -16,6 +17,10 @@ public class Player extends GameObject {
     public static float MAX_JUMP_SPEED = 14f;
     public static final long LONG_JUMP_PRESS = 250;
     public static final int DEFAULT_LIVES = 5;
+
+    public Rectangle getBoundingRect() {
+        return new Rectangle(position.x, position.y, width, height);
+    }
 
     public enum State {
         Standing, Walking, Jumping, Falling, Dead

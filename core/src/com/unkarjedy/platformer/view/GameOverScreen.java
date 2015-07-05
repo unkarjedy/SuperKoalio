@@ -48,8 +48,6 @@ public class GameOverScreen implements Screen {
         sb.begin();
         font.draw(sb, glyphLayout, -glyphLayout.width / 2, camera.viewportHeight * 0.25f);
         sadKoala.draw(sb);
-//        sb.draw(sadKoala, -sadKoala.getWidth() / 2, -sadKoala.getHeight() + textYPos - 40);
-//        sb.draw(sadKoala, 0, 0);
         sb.end();
 
         if (Gdx.input.isTouched() || Gdx.input.isKeyJustPressed(Input.Keys.ANY_KEY))

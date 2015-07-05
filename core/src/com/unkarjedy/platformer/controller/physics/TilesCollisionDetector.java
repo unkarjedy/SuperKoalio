@@ -5,9 +5,12 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool;
+import com.unkarjedy.platformer.controller.physics.TilesCollisionDetector.Collision.CollideTile;
 import com.unkarjedy.platformer.model.GameObject;
 
 import static com.badlogic.gdx.maps.tiled.TiledMapTileLayer.*;
+import static com.unkarjedy.platformer.controller.physics.TilesCollisionDetector.Collision.*;
+import static com.unkarjedy.platformer.controller.physics.TilesCollisionDetector.Collision.RIGHT;
 
 /**
  * Created by Dima Naumenko on 05.07.2015.
@@ -20,6 +23,7 @@ public class TilesCollisionDetector {
     private Array<TiledMapTileLayer.Cell> cells;
     private Collision colision;
     private Pool<Rectangle> rectPool;
+    private Pool<CollideTile> collideTilePool;
 
     {
         tiles = new Array<Rectangle>();
@@ -32,6 +36,14 @@ public class TilesCollisionDetector {
             }
         };
         rectPool.peak = 8;
+
+        collideTilePool =  new Pool<CollideTile>() {
+            @Override
+            protected CollideTile newObject() {
+                return new CollideTile();
+            }
+        };
+        collideTilePool.peak = 8;
     }
 
 
@@ -66,11 +78,9 @@ public class TilesCollisionDetector {
             tile = tiles.get(tileId);
             if (objRect.overlaps(tile)) {
                 if (obj.getVelocity().x > 0) {
-                    colision.cells[Collision.RIGHT] = cells.get(tileId);
-                    colision.tiles[Collision.RIGHT] = tile;
+                    setCollidedTile(RIGHT, tileId);
                 } else {
-                    colision.cells[Collision.LEFT] = cells.get(tileId);
-                    colision.tiles[Collision.LEFT] = tile;
+                    setCollidedTile(LEFT, tileId);
                 }
                 break; // MAYBE NOT BREAK
             }
@@ -93,17 +103,21 @@ public class TilesCollisionDetector {
             tile = tiles.get(tileId);
             if (objRect.overlaps(tile)) {
                 if (obj.getVelocity().y > 0) {
-                    colision.cells[Collision.UP] = cells.get(tileId);
-                    colision.tiles[Collision.UP] = tile;
+                    setCollidedTile(UP, tileId);
                 } else {
-                    colision.cells[Collision.DOWN] = cells.get(tileId);
-                    colision.tiles[Collision.DOWN] = tile;
+                    setCollidedTile(DOWN, tileId);
                 }
                 break;  // MAYBE NOT BREAK
             }
         }
 
         return colision;
+    }
+
+    private void setCollidedTile(int collideTileId, int tileId) {
+        colision.tiles[collideTileId] = collideTilePool.obtain();
+        colision.tiles[collideTileId].cell = cells.get(tileId);
+        colision.tiles[collideTileId].rect = tiles.get(tileId);
     }
 
     private void getTiles(int startX, int startY, int endX, int endY, Array<Rectangle> tiles, Array<TiledMapTileLayer.Cell> cells, TiledMapTileLayer layer) {
@@ -125,54 +139,55 @@ public class TilesCollisionDetector {
 
 
     public static class Collision {
+
+        public static class CollideTile {
+            public Cell cell = new Cell();
+            public Rectangle rect = new Rectangle();
+        }
+
         public static final int UP = 0;
         public static final int DOWN = 1;
         public static final int LEFT = 2;
         public static final int RIGHT = 3;
 
-        public Cell[] cells;
-        public Rectangle[] tiles;
-
+        public CollideTile [] tiles;
 
         public Collision() {
-            cells = new Cell[4];
-            tiles = new Rectangle[4];
+            tiles = new CollideTile [4];
         }
 
         public void clear() {
-            for (int i = 0; i < cells.length; i++) {
-                cells[i] = null;
+            for (int i = 0; i < tiles.length; i++) {
                 tiles[i] = null;
             }
         }
 
-        Cell getCell(int cellId) {
-            return cells[cellId];
+        CollideTile getTile(int cellId) {
+            return tiles[cellId];
         }
 
-        ;
 
-        public Cell getCellX() {
-            return cells[LEFT] != null ? cells[LEFT] : cells[RIGHT];
-        }
-
-        public Cell getCellY() {
-            return cells[UP] != null ? cells[UP] : cells[DOWN];
-        }
-
-        public Rectangle getTileX() {
+        public CollideTile getTileX() {
             return tiles[LEFT] != null ? tiles[LEFT] : tiles[RIGHT];
         }
 
-        public Rectangle getTileY() {
+        public CollideTile getTileY() {
             return tiles[UP] != null ? tiles[UP] : tiles[DOWN];
         }
 
-        boolean hasCollision() {
-            for (Cell cell : cells)
-                if (cell != null)
+        public boolean hasCollision() {
+            for (CollideTile tile: tiles)
+                if (tile != null)
                     return true;
             return false;
+        }
+
+        public CollideTile getAnyTile() {
+            for(CollideTile  tile : tiles){
+                if(tile != null)
+                    return tile;
+            }
+            return null;
         }
     }
 
