@@ -54,14 +54,25 @@ public class PhysicsEngine {
         applyForces(dt);
 
         playerController.getPlayer().getVelocity().x *= DAMPING;
-        resolveObjectWallsCollisions(playerController.getPlayer(), dt);
+
+        for(GameObjectController controller : gameObjectControllers){
+            resolveObjectWallsCollisions(controller, dt);
+            resolveObjectObjectCollisions(controller, dt);
+        }
 
         applyMovements(dt);
     }
 
-    private void applyMovements(float dt) {
-        for (GameObjectController oc : gameObjectControllers) {
-            oc.getObject().update(dt);
+    private void resolveObjectObjectCollisions(GameObjectController controller, float dt) {
+        Collision collision;
+        for(GameObjectController secondController : gameObjectControllers){
+            if(secondController == controller)
+                continue;
+
+            if(controller.getObject().getBoundingRect()
+                    .overlaps(secondController.getObject().getBoundingRect())){
+                // TODO
+            }
         }
     }
 
@@ -71,18 +82,24 @@ public class PhysicsEngine {
         }
     }
 
-    private void resolveObjectWallsCollisions(GameObject obj, float dt) {
-        Collision collision = wallsColliderDetector.detectCollisions(playerController.getPlayer(), dt);
+    private void applyMovements(float dt) {
+        for (GameObjectController oc : gameObjectControllers) {
+            oc.getObject().update(dt);
+        }
+    }
+    private void resolveObjectWallsCollisions(GameObjectController oc,  float dt) {
+        GameObject obj = oc.getObject();
+        Collision collision = wallsColliderDetector.detectCollisions(obj, dt);
 
         CollideTile xCollision = collision.getTileX();
         if(xCollision != null){
-            playerController.onLevelTileCollided(LayerType.WALLS, xCollision, true);
+            oc.onLevelTileCollided(LayerType.WALLS, xCollision, true);
             obj.getVelocity().x = 0;
         }
 
         CollideTile yCollision = collision.getTileY();
         if(yCollision != null){
-            playerController.onLevelTileCollided(LayerType.WALLS, yCollision, false);
+            oc.onLevelTileCollided(LayerType.WALLS, yCollision, false);
             if (obj.getVelocity().y > 0) {
                 obj.getPosition().y = collision.getTileY().rect.y - obj.getHeight();
             } else {
@@ -97,13 +114,13 @@ public class PhysicsEngine {
         wallsColliderDetector = new TilesCollisionDetector(level.getWallsLayer());
     }
 
-    public void addGameObject(GameObjectController oc) {
+    public void addGameObjectController(GameObjectController oc) {
         gameObjectControllers.add(oc);
     }
 
     public void setPlayerController(PlayerController playerController) {
         this.playerController = playerController;
-        addGameObject(playerController);
+        addGameObjectController(playerController);
     }
 
 }

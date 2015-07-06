@@ -2,13 +2,19 @@ package com.unkarjedy.platformer.model;
 
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapObject;
+import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.unkarjedy.platformer.utils.ResourceManager;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * Created by Dima Naumenko on 01.07.2015.
@@ -118,6 +124,19 @@ public class GameLevel {
             }
         }
         return stars;
+    }
+
+
+    public List<Vector2> getEnemiesSpawnPositions() {
+        MapLayer enemySpawnsLayer = map.getLayers().get("enemy_spawns");
+        List<Vector2> enemySpawns = new ArrayList<>();
+        for (MapObject mapObject : enemySpawnsLayer.getObjects()) {
+            Vector2 enemyPos = new Vector2();
+            ((RectangleMapObject) mapObject).getRectangle().getCenter(enemyPos);
+            enemyPos.scl(unitScale);
+            enemySpawns.add(enemyPos);
+        }
+        return enemySpawns;
     }
 
 }

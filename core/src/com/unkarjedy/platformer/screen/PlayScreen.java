@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.GL30;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.Vector2;
 import com.unkarjedy.platformer.PlatformerGame;
 import com.unkarjedy.platformer.controller.CameraController;
 import com.unkarjedy.platformer.controller.GameController;
@@ -54,6 +55,7 @@ public class PlayScreen implements Screen {
         loadLevel("level1.tmx");
         createCamera();
         createPlayer();
+        createEnemies();
 
         hudRenderer = new HUDRenderer(player, levelScore);
         gameController = new GameController(this);
@@ -66,6 +68,16 @@ public class PlayScreen implements Screen {
         }
 
         cameraController = new CameraController(camera, player, level);
+    }
+
+    private void createEnemies() {
+        for(Vector2 enemyPos : level.getEnemiesSpawnPositions()){
+            Enemy enemy = new Enemy();
+            enemy.setPosition(enemyPos);
+            enemy.setWidth(UNIT_SCALE * enemy.getWidth());
+            enemy.setHeight(UNIT_SCALE * enemy.getHeight());
+            enemies.add(enemy);
+        }
     }
 
 
@@ -87,7 +99,6 @@ public class PlayScreen implements Screen {
 
         fpsLogger.log();
         memoryLogger.log();
-
     }
 
     private void loadLevel(String levelFilename) {
@@ -182,5 +193,9 @@ public class PlayScreen implements Screen {
 
     public HUDRenderer getHudRenderer() {
         return hudRenderer;
+    }
+
+    public List<Enemy> getEnemies() {
+        return enemies;
     }
 }

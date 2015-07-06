@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.unkarjedy.platformer.PlatformerGame;
+import com.unkarjedy.platformer.model.Enemy;
 import com.unkarjedy.platformer.model.GameLevel;
 import com.unkarjedy.platformer.model.LevelScore;
 import com.unkarjedy.platformer.model.Player;
@@ -11,6 +12,9 @@ import com.unkarjedy.platformer.physics.PhysicsEngine;
 import com.unkarjedy.platformer.screen.GameOverScreen;
 import com.unkarjedy.platformer.screen.LevelCompletedScreen;
 import com.unkarjedy.platformer.screen.PlayScreen;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Dima Naumenko on 02.07.2015.
@@ -21,6 +25,7 @@ public class GameController implements InputProcessor, PlayerActionsListner {;
     private PlayScreen playScreen;
 
     private PlayerController playerController;
+    private List<EnemyAiController> enemyAiControllers;
     private PhysicsEngine physics;
 
     private GameLevel level;
@@ -36,6 +41,12 @@ public class GameController implements InputProcessor, PlayerActionsListner {;
         playerController.addPlayerStateListner(this);
         playerController.addPlayerStateListner(playScreen.getHudRenderer());
 
+        enemyAiControllers = new ArrayList<>();
+        for(Enemy enemy: playScreen.getEnemies()){{
+            enemyAiControllers.add(new EnemyAiController(enemy));
+        }};
+
+
         initPhysicsEngine();
     }
 
@@ -43,6 +54,9 @@ public class GameController implements InputProcessor, PlayerActionsListner {;
         checkPressedKeys();
 
         playerController.update(dt);
+        for(EnemyAiController enemyAiController : enemyAiControllers){
+            enemyAiController.update(dt);
+        }
 
         physics.update(dt); // collisions and forces
     }
@@ -63,6 +77,10 @@ public class GameController implements InputProcessor, PlayerActionsListner {;
     private void initPhysicsEngine() {
         physics = new PhysicsEngine(level);
         physics.setPlayerController(playerController);
+
+        for(EnemyAiController enemyAiController : enemyAiControllers){
+            physics.addGameObjectController(enemyAiController);
+        }
     }
 
     @Override

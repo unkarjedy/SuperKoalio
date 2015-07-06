@@ -21,7 +21,7 @@
    eJzt2TkKADAIBED/X+XJadJHyCVhBgQbFWw3AgAAAAAAAAD+1kYBAAAAAABwx2o2k5m/kQHN9p+43xL9rv0Vvcj2qv8EALI6v9wIcQ==
   </data>
  </layer>
- <objectgroup name="enemies_spawns">
+ <objectgroup name="enemy_spawns">
   <object id="27" x="526.5" y="258" width="31" height="27.5"/>
   <object id="28" x="983.5" y="250.5" width="30" height="28"/>
   <object id="29" x="1501" y="252" width="37" height="30.5"/>

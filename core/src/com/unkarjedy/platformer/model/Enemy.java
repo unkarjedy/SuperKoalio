@@ -12,6 +12,7 @@ public class Enemy extends Person {
 
     public Enemy() {
         super();
+
         TextureAtlas atlas = new TextureAtlas(Gdx.files.internal("textures/solbrain.pack"));
         for (TextureRegion region : atlas.getRegions())
             region.flip(true, false);
@@ -27,5 +28,7 @@ public class Enemy extends Person {
 
         width = stand.getKeyFrame(0).getRegionWidth();
         height = stand.getKeyFrame(0).getRegionHeight();
+
+        maxVelocity = 5;
     }
 }

@@ -5,6 +5,6 @@ package com.unkarjedy.platformer.utils;
  */
 public class Constants {
 
-    public static final float MIN_DELTA_TIME = 0.1f;
+    public static final float MIN_DELTA_TIME = 0.04f;
 
 }

@@ -9,11 +9,15 @@ import com.badlogic.gdx.math.Vector2;
  * Created by Dima Naumenko on 06.07.2015.
  */
 public abstract class Person extends GameObject {
-    protected static float maxVelocity = 10f;
-    protected static float maxJumpSpeed = 14f;
-    protected static int defaultLives = 5;
+    protected float maxVelocity = 10f;
+    protected float maxJumpSpeed = 14f;
+    protected int defaultLives = 5;
 
     protected int lives = defaultLives;
+
+    public void turnAround() {
+        facesRight = !facesRight;
+    }
 
     public enum State {
         Standing, Walking, Jumping, Falling, Dead
@@ -41,15 +45,15 @@ public abstract class Person extends GameObject {
         lives = defaultLives;
     }
 
-    public static float getMaxVelocity() {
+    public float getMaxVelocity() {
         return maxVelocity;
     }
 
-    public static float getMaxJumpSpeed() {
+    public float getMaxJumpSpeed() {
         return maxJumpSpeed;
     }
 
-    public static int getDefaultLives() {
+    public int getDefaultLives() {
         return defaultLives;
     }
 

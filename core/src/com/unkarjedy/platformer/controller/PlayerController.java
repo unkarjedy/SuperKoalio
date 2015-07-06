@@ -20,7 +20,7 @@ import static com.unkarjedy.platformer.model.GameLevel.LayerType.HAZZARDS;
 /**
  * Created by Dima Naumenko on 02.07.2015.
  */
-public class PlayerController extends GameObjectController {
+public class PlayerController extends PersonController {
 
     private Player player;
     private GameLevel level;
@@ -55,36 +55,19 @@ public class PlayerController extends GameObjectController {
         starsColliderDetector = new TilesCollisionDetector(level.getStarsLayer());
     }
 
-    public void moveLeft() {
-        player.getVelocity().x = -Player.getMaxVelocity();
-        if (player.isGrounded()) {
-            player.setState(Player.State.Walking);
-        }
-        player.setFacesRight(false);
-    }
-
-    public void moveRight() {
-        player.getVelocity().x = Player.getMaxVelocity();
-        if (player.isGrounded()) {
-            player.setState(Player.State.Walking);
-        }
-        player.setFacesRight(true);
-    }
-
     public void jump() {
-        Player.State state = player.getState();
+        Player.State state = person.getState();
         if (!state.equals(Player.State.Jumping) &&
                 !state.equals(Player.State.Falling)) {
             jumpingPressed = true;
-            player.setGrounded(false);
+            person.setGrounded(false);
             jumpPressedTime = System.currentTimeMillis();
-            player.setState(Player.State.Jumping);
-            player.getVelocity().y = Player.getMaxVelocity();
+            person.setState(Player.State.Jumping);
+            person.getVelocity().y = person.getMaxVelocity();
 
             jumpSound.play();
         }
     }
-
 
     public void update(float dt) {
         updateJumping();
@@ -131,21 +114,6 @@ public class PlayerController extends GameObjectController {
         }
     }
 
-    private void clampVelocities() {
-        // clamp the velocity to the maximum, x-axis only
-        if (Math.abs(player.getVelocity().x) > Player.getMaxVelocity()) {
-            player.getVelocity().x = Math.signum(player.getVelocity().x) * Player.getMaxVelocity();
-        }
-
-        // clamp the velocity to 0 if it's < 1, and set the state to standing
-        if (Math.abs(player.getVelocity().x) < 1) {
-            player.getVelocity().x = 0;
-            if (player.isGrounded()) {
-                player.setState(Player.State.Standing);
-            }
-        }
-    }
-
     private void checkIfIsfalling() {
         if (player.getState() != Player.State.Falling) {
             if (player.getVelocity().y < 0) {
@@ -162,7 +130,7 @@ public class PlayerController extends GameObjectController {
         if (jumpButtonIsPressedTooLong()) {
             jumpingPressed = false;
         } else if (player.getState().equals(Player.State.Jumping)) {
-            player.getVelocity().y = Player.getMaxJumpSpeed();
+            player.getVelocity().y = person.getMaxJumpSpeed();
         }
     }
 
@@ -181,15 +149,7 @@ public class PlayerController extends GameObjectController {
 
     @Override
     public void onLevelTileCollided(LayerType type, CollideTile tile, boolean isXAxis) {
-        if (WALLS == type) {
-            if (!isXAxis) {
-                if (player.getVelocity().y > 0) {
-                    player.setState(Player.State.Falling);
-                } else {
-                    player.setGrounded(true);
-                }
-            }
-        }
+        super.onLevelTileCollided(type, tile, isXAxis);
         if (HAZZARDS == type) {
             if (System.currentTimeMillis() - hazardLastHit > 1000 ||
                     tile.cell != lastHazzardCell) {
